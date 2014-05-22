@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="coin">
+        <item quantity="one">1 coin</item>
+        <item quantity="other">%d coins</item>
+    </plurals>
+</resources>
