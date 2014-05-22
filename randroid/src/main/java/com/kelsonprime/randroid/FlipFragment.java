@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
-import com.google.android.glass.app.Card;
 import com.google.android.glass.media.Sounds;
 
 import java.util.Random;
@@ -26,17 +26,22 @@ public class FlipFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Card c = new Card(getActivity());
+        View view = inflater.inflate(R.layout.fragment_result, container, false);
+        GridView resultGrid = (GridView) view.findViewById(R.id.fragment_result_grid);
+
         Random rnd = new Random();
+        int[] list = new int[mCount];
         for(int i = 0; i < mCount; i++) {
             if(rnd.nextBoolean()){
-                c.addImage(R.drawable.quarter_head);
+                list[i] = R.drawable.quarter_head;
             }else{
-                c.addImage(R.drawable.quarter_tails);
+                list[i] = R.drawable.quarter_tails;
             }
         }
-        c.setImageLayout(Card.ImageLayout.FULL);
-        return c.getView();
+
+        resultGrid.setAdapter(new ResourceListAdapter(getActivity(), list));
+        resultGrid.setNumColumns(list.length);
+        return view;
     }
 
     @Override
