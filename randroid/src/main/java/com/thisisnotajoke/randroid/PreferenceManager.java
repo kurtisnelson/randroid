@@ -1,4 +1,4 @@
-package com.kelsonprime.randroid;
+package com.thisisnotajoke.randroid;
 
 import android.content.Context;
 import android.content.SharedPreferences;

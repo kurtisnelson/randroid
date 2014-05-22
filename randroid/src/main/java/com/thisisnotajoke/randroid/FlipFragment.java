@@ -1,4 +1,4 @@
-package com.kelsonprime.randroid;
+package com.thisisnotajoke.randroid;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.google.android.glass.media.Sounds;
+import com.kelsonprime.randroid.R;
 
 import java.util.Random;
 
@@ -33,9 +34,9 @@ public class FlipFragment extends Fragment {
         int[] list = new int[mCount];
         for(int i = 0; i < mCount; i++) {
             if(rnd.nextBoolean()){
-                list[i] = R.drawable.quarter_head;
+                list[i] = R.drawable.saca_head;
             }else{
-                list[i] = R.drawable.quarter_tails;
+                list[i] = R.drawable.saca_tails;
             }
         }
 

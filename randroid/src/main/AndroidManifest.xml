@@ -3,7 +3,7 @@
 
     <application android:allowBackup="true"
         android:label="@string/app_name"
-        android:icon="@drawable/quarter_head"
+        android:icon="@drawable/saca_head"
 >
         <!--<activity android:name=".RollActivity">-->
             <!--<intent-filter>-->
@@ -14,7 +14,7 @@
                 <!--android:resource="@xml/roll_the_dice" />-->
         <!--</activity>-->
 
-        <activity android:name=".FlipActivity"
+        <activity android:name="com.thisisnotajoke.randroid.FlipActivity"
             android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name=

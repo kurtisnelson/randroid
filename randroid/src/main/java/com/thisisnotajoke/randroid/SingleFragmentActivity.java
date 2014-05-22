@@ -1,8 +1,10 @@
-package com.kelsonprime.randroid;
+package com.thisisnotajoke.randroid;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+
+import com.kelsonprime.randroid.R;
 
 public abstract class SingleFragmentActivity extends FragmentActivity{
     protected abstract Fragment getFragment();
