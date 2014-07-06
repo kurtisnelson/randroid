@@ -1,23 +1,22 @@
 package com.thisisnotajoke.randroid;
 
-import android.content.Context;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.widget.AdapterView;
 
-import com.google.android.glass.media.Sounds;
+import com.google.android.glass.widget.CardScrollView;
 import com.kelsonprime.randroid.R;
-
-import java.util.Random;
 
 public class FlipFragment extends Fragment {
 
     private static final String PARAM_COUNT = "FlipFragment.count";
+    private static final String TAG = "FlipFragment";
     private int mCount;
+    private CardScrollView mScrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,28 +27,40 @@ public class FlipFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-        GridView resultGrid = (GridView) view.findViewById(R.id.fragment_result_grid);
+        mScrollView = (CardScrollView) view.findViewById(R.id.fragment_result_card_scroll);
 
-        Random rnd = new Random();
-        int[] list = new int[mCount];
-        for(int i = 0; i < mCount; i++) {
-            if(rnd.nextBoolean()){
-                list[i] = R.drawable.saca_head;
-            }else{
-                list[i] = R.drawable.saca_tails;
+        mScrollView.setAdapter(new CoinScrollAdapter(getActivity()));
+        mScrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getActivity().openOptionsMenu();
             }
-        }
+        });
+        mScrollView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                new PreferenceManager(getActivity()).setCoins(position + 1);
+            }
 
-        resultGrid.setAdapter(new ResourceListAdapter(getActivity(), list));
-        resultGrid.setNumColumns(list.length);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        audio.playSoundEffect(Sounds.SELECTED);
+    public void onStart() {
+        super.onStart();
+        mScrollView.activate();
+        mScrollView.setSelection(mCount - 1);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mScrollView.deactivate();
     }
 
     public static FlipFragment newInstance(int count) {

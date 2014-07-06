@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
@@ -15,7 +17,7 @@ import com.kelsonprime.randroid.R;
 
 public class FlipActivity extends SingleFragmentActivity{
     private static final String FLIP_COUNT = "FlipActivity.count";
-    private GestureDetector mGestureDetector;
+    private static final String TAG = "FlipActivity";
     private int mCount;
 
     @Override
@@ -25,34 +27,20 @@ public class FlipActivity extends SingleFragmentActivity{
         } else {
             mCount = new PreferenceManager(this).getCoins();
         }
+
         new PreferenceManager(this).setCoins(mCount);
 
-        mGestureDetector = new GestureDetector(this);
-        //Create a base listener for generic gestures
-        mGestureDetector.setBaseListener( new GestureDetector.BaseListener() {
-            @Override
-            public boolean onGesture(Gesture gesture) {
-                if (gesture == Gesture.TAP) {
-                    newInstance(FlipActivity.this, mCount);
-                    return true;
-                } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    if(mCount < 4) {
-                        newInstance(FlipActivity.this, mCount + 1);
-                        return true;
-                    }
-                } else if (gesture == Gesture.SWIPE_LEFT) {
-                    if(mCount > 1) {
-                        newInstance(FlipActivity.this, mCount - 1);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
 
         //FLIP_A_COIN for whatever stupid reason is available on the main menu but not contextually?
         //getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.coin, menu);
+        return true;
     }
 
     @Override
@@ -69,7 +57,7 @@ public class FlipActivity extends SingleFragmentActivity{
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
             switch (item.getItemId()) {
-                case R.id.menu_item_flip:
+                case R.id.menu_coin_voice_flip:
                     newInstance(FlipActivity.this, mCount);
                     break;
                 default:
@@ -82,11 +70,14 @@ public class FlipActivity extends SingleFragmentActivity{
     }
 
     @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_coin_flip:
+                newInstance(this, mCount);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     @Override
