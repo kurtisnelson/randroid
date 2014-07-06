@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.view.WindowUtils;
+import com.kelsonprime.randroid.R;
 
 public class FlipActivity extends SingleFragmentActivity{
     private static final String FLIP_COUNT = "FlipActivity.count";
@@ -32,8 +36,10 @@ public class FlipActivity extends SingleFragmentActivity{
                     newInstance(FlipActivity.this, mCount);
                     return true;
                 } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    newInstance(FlipActivity.this, mCount + 1);
-                    return true;
+                    if(mCount < 4) {
+                        newInstance(FlipActivity.this, mCount + 1);
+                        return true;
+                    }
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     if(mCount > 1) {
                         newInstance(FlipActivity.this, mCount - 1);
@@ -43,7 +49,36 @@ public class FlipActivity extends SingleFragmentActivity{
                 return false;
             }
         });
+
+        //FLIP_A_COIN for whatever stupid reason is available on the main menu but not contextually?
+        //getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public boolean onCreatePanelMenu(int featureId, Menu menu) {
+        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
+            getMenuInflater().inflate(R.menu.coin_voice, menu);
+            return true;
+        }
+        // Pass through to super to setup touch menu.
+        return super.onCreatePanelMenu(featureId, menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
+            switch (item.getItemId()) {
+                case R.id.menu_item_flip:
+                    newInstance(FlipActivity.this, mCount);
+                    break;
+                default:
+                    return true;
+            }
+            return true;
+        }
+        // Good practice to pass through to super if not handled
+        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override
